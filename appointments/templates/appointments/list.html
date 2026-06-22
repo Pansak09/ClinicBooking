@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}รายการนัดหมาย | Clinic Booking{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto mt-12 p-6 bg-white shadow-lg rounded-2xl">
+
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-extrabold text-blue-700 flex items-center gap-2">
+      รายการนัดหมาย
+    </h1>
+    <a href="{% url 'appointments:create' %}"
+       class="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-5 py-2 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-800 transition duration-200 ease-in-out">
+      เพิ่มนัดหมาย
+    </a>
+  </div>
+
+  <!-- ถ้ามีข้อมูล -->
+  {% if appointments %}
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full border-collapse bg-white">
+      <thead class="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-gray-300">
+        <tr>
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700 uppercase">ชื่อผู้ป่วย</th>
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700 uppercase">แพทย์</th>
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700 uppercase">วันเวลานัดหมาย</th>
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700 uppercase">สถานะ</th>
+          <th class="px-5 py-3 text-center text-sm font-semibold text-gray-700 uppercase">การจัดการ</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+
+        <!--ลูป นัดหมาย -->
+        {% for a in appointments %}
+        <tr class="hover:bg-blue-50 transition duration-200 ease-in-out">
+          <td class="px-5 py-3 text-gray-800 font-medium">
+            <a href="{% url 'appointments:detail' a.id %}"
+               class="text-cyan-700 hover:text-cyan-900 hover:underline transition duration-150">
+              {{ a.patient_name }}
+            </a>
+          </td>
+
+          <td class="px-5 py-3 text-gray-600">{{ a.doctor.name }}</td>
+          <td class="px-5 py-3 text-gray-600">{{ a.appointment_time|date:"d/m/Y H:i" }}</td>
+          <td class="px-5 py-3">
+            {% if a.status == 'pending' %}
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                ● รอพบแพทย์
+              </span>
+            {% elif a.status == 'completed' %}
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                ● เสร็จสิ้น
+              </span>
+            {% else %}
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                ● ยกเลิก
+              </span>
+            {% endif %}
+          </td>
+
+          <td class="px-5 py-3 text-center space-x-2">
+            <a href="{% url 'appointments:edit' a.id %}"
+               class="text-blue-600 hover:text-blue-800 font-medium transition duration-150">แก้ไข</a>
+            <span>|</span>
+            <a href="{% url 'appointments:delete' a.id %}"
+               class="text-red-600 hover:text-red-800 font-medium transition duration-150">ลบ</a>
+
+            <form action="{% url 'appointments:update_status' a.id %}" method="post" class="inline">
+              {% csrf_token %}
+              <button type="submit" 
+                class="ml-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-3 py-1 rounded-full text-xs shadow hover:from-cyan-600 hover:to-blue-600 transition duration-200">
+                อัปเดตสถานะ
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+  <div class="text-center py-10 text-gray-500">
+    <p class="text-lg">ยังไม่มีข้อมูลการนัดหมาย</p>
+    <a href="{% url 'appointments:create' %}"
+       class="inline-block mt-4 bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition">
+      เพิ่มนัดหมายแรกของคุณ
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+<nav class="bg-gradient-to-r from-cyan-500 via-blue-500 to-blue-600 shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+
+    <a href="/" class="flex items-center gap-2 text-white font-extrabold text-2xl hover:opacity-90 transition">
+      <span>Clinic<span class="text-yellow-200">Booking</span></span>
+    </a>
+
+    <div class="hidden md:flex items-center space-x-8 text-white font-medium">
+      <a href="{% url 'home' %}" class="hover:text-yellow-100 transition">หน้าแรก</a>
+
+    <div class="hidden md:flex items-center space-x-4 text-white">
+      {% if user.is_authenticated %}
+        <span class="text-sm">สวัสดี, <strong>{{ user.username }}</strong></span>
+        <a href="{% url 'logout' %}" class="bg-white text-cyan-700 font-medium px-3 py-1.5 rounded-lg hover:bg-cyan-50 transition">
+          ออกจากระบบ
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}" class="bg-white text-cyan-700 font-medium px-3 py-1.5 rounded-lg hover:bg-cyan-50 transition">
+          เข้าสู่ระบบ
+        </a>
+        <a href="{% url 'signup' %}" class="border border-white text-white font-medium px-3 py-1.5 rounded-lg hover:bg-white hover:text-cyan-700 transition">
+          สมัครสมาชิก
+        </a>
+      {% endif %}
+    </div>
+
+    <button id="menu-toggle" class="md:hidden text-white text-3xl focus:outline-none">
+      ☰
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden md:hidden bg-cyan-600 text-white px-6 pb-4 space-y-2 transition-all">
+    <a href="{% url 'home' %}" class="block py-2 hover:bg-cyan-700 rounded">หน้าแรก</a>
+    <a href="{% url 'appointments:list' %}" class="block py-2 hover:bg-cyan-700 rounded">นัดหมาย</a>
+    <a href="{% url 'doctors:create555' %}" class="block py-2 hover:bg-cyan-700 rounded">เพิ่มแพทย์</a>
+    <a href="/admin/" class="block py-2 hover:bg-cyan-700 rounded">ผู้ดูแลระบบ</a>
+
+    {% if user.is_authenticated %}
+      <hr class="border-cyan-400 my-2">
+      <div class="flex justify-between items-center py-2">
+        <span>👤 {{ user.username }}</span>
+        <a href="{% url 'logout' %}" class="bg-white text-cyan-700 text-sm font-medium px-3 py-1 rounded-lg hover:bg-cyan-50">ออกจากระบบ</a>
+      </div>
+    {% else %}
+      <hr class="border-cyan-400 my-2">
+      <a href="{% url 'login' %}" class="block py-2 hover:bg-cyan-700 rounded text-center">เข้าสู่ระบบ</a>
+      <a href="{% url 'signup' %}" class="block py-2 hover:bg-cyan-700 rounded text-center">สมัครสมาชิก</a>
+    {% endif %}
+  </div>
+</nav>
+
+<script>
+  const toggleBtn = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  toggleBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>

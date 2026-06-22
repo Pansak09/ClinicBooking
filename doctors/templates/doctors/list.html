@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}รายชื่อแพทย์ | Clinic Booking{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-10">
+  <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+    <h2 class="text-3xl font-extrabold text-cyan-600 mb-4 md:mb-0">รายชื่อแพทย์ทั้งหมด</h2>
+    <a href="{% url 'doctors:create555' %}" 
+       class="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-5 py-2 rounded-full shadow-md transition duration-300 flex items-center gap-2">
+      เพิ่มแพทย์ใหม่
+    </a>
+  </div>
+
+  {% if doctors %}
+    <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {% for d in doctors %}
+        <div class="group bg-white border border-cyan-100 rounded-2xl shadow-md hover:shadow-xl transition duration-300 p-6 flex flex-col items-center text-center hover:-translate-y-1">
+
+          {% if d.image %}
+            <img src="{{ d.image.url }}" alt="{{ d.name }}"
+                 class="w-28 h-28 object-cover rounded-full border-4 border-cyan-200 shadow-md mb-4 group-hover:border-cyan-400 transition">
+          {% else %}
+            <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center text-sm text-gray-500 border-4 border-gray-300 mb-4">
+              ไม่มีรูป
+            </div>
+          {% endif %}
+
+          <h3 class="text-xl font-bold text-cyan-700">{{ d.name }}</h3>
+          <p class="text-gray-600 text-sm mt-1">สาขา: <span class="font-medium text-gray-800">{{ d.specialty|default:"-" }}</span></p>
+          <p class="text-gray-600 text-sm">เบอร์โทร: <span class="font-medium text-gray-800">{{ d.contact|default:"-" }}</span></p>
+
+          <p class="mt-2 text-sm text-gray-600">
+            เวลาเข้าทำงาน:
+            {% if d.latest_checkin %}
+              <span class="text-gray-800">{{ d.latest_checkin|date:"d/m/Y H:i น." }}</span>
+            {% else %}
+              <span class="italic text-gray-400">ยังไม่มีข้อมูล</span>
+            {% endif %}
+          </p>
+
+          <div class="mt-4 flex flex-wrap justify-center gap-3">
+            <a href="{% url 'doctors:update' d.pk %}" 
+               class="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-4 py-1.5 rounded-full shadow-sm transition">
+              แก้ไข
+            </a>
+            <a href="{% url 'doctors:delete' d.pk %}" 
+               class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-1.5 rounded-full shadow-sm transition">
+              ลบ
+            </a>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-10">
+      <p class="text-gray-500 text-lg mb-4">ยังไม่มีข้อมูลแพทย์</p>
+      <a href="{% url 'doctors:create' %}"
+         class="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-5 py-2 rounded-full shadow-md transition">
+        เพิ่มแพทย์ใหม่
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
