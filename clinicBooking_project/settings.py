@@ -1,6 +1,8 @@
 import os
 import environ
 from pathlib import Path
+import dj_database_url
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -79,15 +81,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'clinicBooking_project.wsgi.application'
 
 DATABASES = {
-    "default":{
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD"),
-        "HOST": env("DB_HOST"),
-        "PORT": env("DB_PORT", default="5432"),
-    }
+    'default': dj_database_url.config(
+        # อ่านลิงก์ยาวตัวเดียวจาก Render ถ้าไม่มี (รันในเครื่องตัวเอง) ให้ใช้ SQLite
+        default=os.environ.get('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        conn_max_age=600
+    )
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
