@@ -79,7 +79,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'clinicBooking_project.wsgi.application'
 
 DATABASES = {
-    "default": {
+    "default":{
         "ENGINE": "django.db.backends.postgresql",
         "NAME": env("DB_NAME"),
         "USER": env("DB_USER"),
